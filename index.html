@@ -98,7 +98,7 @@
     // 조회버튼 실행
     $('button').click(function(){
       $.ajax({
-        url: "index.js",
+        url: "saved-data.js",
         method: "GET",
         success: function(result) {
           grid.resetData(eval(result));
@@ -116,12 +116,12 @@
         showHorizontalBorder: true,
       },
       header: {
-        background: "#eaeaea",
+        background: "#e0e0e0",
         border: "#e0e0e0",
         showHorizontalBorder: true,
       },
       rowHeader: {
-        background: "#eaeaea",
+        background: "#e0e0e0",
         border: "#e0e0e0",
         showHorizontalBorder: true,
       },

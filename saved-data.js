@@ -8,38 +8,31 @@
   },
   {
     id: 2,
-    name: "John Doe",
-    birth: "1985.12.30",
-    bank: "Citibank",
+    name: "김사나",
+    birth: "1998.12.30",
+    bank: "KB",
     account: "123-456-789012"
   },
   {
     id: 3,
-    name: "Emma Smith",
+    name: "오하영",
     birth: "1992.05.20",
-    bank: "Wells Fargo",
+    bank: "외환",
     account: "987-654-321098"
   },
   {
     id: 4,
-    name: "Alex Johnson",
+    name: "정수정",
     birth: "1988.09.05",
-    bank: "Bank of America",
+    bank: "KB",
     account: "567-890-123456"
   },
   {
     id: 5,
-    name: "Sophia Lee",
+    name: "김슬기",
     birth: "1999.03.11",
-    bank: "KB Kookmin",
+    bank: "신한",
     account: "333-111-555888"
   },
-  {
-    id: 6,
-    name: "William Kim",
-    birth: "1980.11.25",
-    bank: "HSBC",
-    account: "444-222-666999"
-  }
 ]
 

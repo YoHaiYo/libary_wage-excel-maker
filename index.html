@@ -14,18 +14,27 @@
   <script src="/node_modules/tui-time-picker/dist/tui-time-picker.min.js"></script>
   <script src="/node_modules/tui-date-picker/dist/tui-date-picker.min.js"></script>
   <script src="/node_modules/tui-grid/dist/tui-grid.min.js"></script>
-  <!-- <script src="index.js"></script> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+  <link rel="stylesheet" href="/main.css">
+
+  <script src="saved-data.js"></script>
+
 </head>
-<style>
-  * {
-    margin: 0 auto;
-  }
-</style>
 <script>
-  // window.onload : html 다 실행되고 다음에 실행되게 하기. defer와 같은건가?
-  var grid;
+
+var grid;
+var loadedData = [];
+
   window.onload = function() {
+
+    // 로드되지마자 보여줄 데이터
+  $.ajax({
+    url: "saved-data.js",
+    method: "GET",
+    success: function(result) {
+      grid.resetData(eval(result));
+    }
+  });
     
     grid = new tui.Grid({
       el: document.getElementById('grid'),
@@ -34,11 +43,11 @@
       scrollY: false,
       rowHeaders: ["rowNum"],
       columns: [
-        {
-          header: 'Id',
-          name: 'id',
-          editor: 'text'
-        },
+        // {
+        //   header: 'Id',
+        //   name: 'id',
+        //   editor: 'text'
+        // },
         {
           header: '이름',
           name: 'name',
@@ -80,7 +89,7 @@
                 {
                   text: '외환',
                   value: '외환'
-                }
+                },
               ]
             }
           }
@@ -92,23 +101,15 @@
             type: 'text'
           } 
         },
+        
       ],
       draggable: true
     });
 
-    // 버튼 실행
-    
-    $('#loadInitialButton').click(function(){
-      $.ajax({
-        url: "initial-data.js",
-        method: "GET",
-        success: function(result) {
-          grid.resetData(eval(result));
-        }
-      })
-    })
 
-    $('#loadDataButton').click(function(){
+    /// 버튼 실행
+    // 초기화
+    $('#loadInitialButton').click(function(){
       $.ajax({
         url: "saved-data.js",
         method: "GET",
@@ -117,6 +118,74 @@
         }
       })
     })
+    // 데이터불러오기
+    $('#loadDataButton').click(function() {
+      // Check if there is any data in the loadedData array
+      if (loadedData.length > 0) {
+        // Reset the grid with the loadedData array
+        grid.resetData(loadedData);
+      } else {
+        alert('불러올 데이터가 없습니다.');
+      }
+    });
+
+    // 행추가
+    $('#addRowButton').click(function() {
+      // Create a new empty row object
+      var newRow = {
+        name: '',
+        birth: '',
+        bank: '',
+        account: '',
+      };
+
+      // Add the new row to the grid's data
+      grid.appendRow(newRow);
+    });
+
+    // 데이터 체크
+    $('#checkData').click(function() {
+      console.log(savedData);
+    });
+
+    // 데이터 저장
+    $('#saveDataButton').click(function() {
+      // Get the data from the grid
+      const gridData = grid.getData();
+
+      // Save the grid data to both savedData and loadedData arrays
+      savedData = gridData;
+      loadedData = gridData;
+
+      // Log the updated savedData array (optional)
+      console.log(savedData);
+
+      // You can also choose to do other actions here, such as displaying a success message.
+      // For example:
+      alert('현재 입력된 데이터가 저장되었습니다.');
+    });
+
+
+    // 행 삭제
+    $('#deleteDataButton').click(function() {
+
+      // 삭제하기 전에 기존 데이터를 저장해야됨.
+      const gridData = grid.getData();
+      savedData = gridData;
+
+      // Check if there is any data in the savedData array
+      if (savedData.length > 0) {
+        // Remove the last object from the savedData array
+        savedData.pop();
+
+        // You can also choose to do other actions here, such as updating the grid with the modified data.
+        // For example, if you want to update the grid, you can use the following line:
+        grid.resetData(savedData);
+      } else {
+        alert('삭제할 데이터가 없습니다.');
+      }
+    });
+
   }
   // tui.grid 스타일 테마 
   tui.Grid.applyTheme('normal',{
@@ -124,21 +193,22 @@
       normal: {
         background: "#fff",
         border: "#e0e0e0",
-        showVerticalBorder: false,
+        showVerticalBorder: true,
         showHorizontalBorder: true,
       },
       header: {
-        background: "#e0e0e0",
+        background: "#f0fbff",
         border: "#e0e0e0",
         showHorizontalBorder: true,
       },
       rowHeader: {
-        background: "#e0e0e0",
+        background: "#f0fbff",
         border: "#e0e0e0",
         showHorizontalBorder: true,
       },
     }
   })
+
 
   // Function to save data to Excel
   function saveToExcel() {
@@ -157,7 +227,7 @@
 
   const link = document.createElement('a');
   link.setAttribute('href', url);
-  link.setAttribute('download', 'grid_data.xlsx');
+  link.setAttribute('download', '마포소금나루도서관  단시간  근로자  임금지급 조서.xlsx');
   link.style.visibility = 'hidden';
 
   document.body.appendChild(link);
@@ -168,19 +238,33 @@
 
 </script>
 <body>
-  <div id="wrap" style="width: 90%;">
-    <div style="display: flex; margin: 10px;">
+  <div id="wrap">
+    <div id="wrap-btn">
+
       <div>
-        <button type="button" class="btn btn-primary btn-sm" id="loadInitialButton">입력 시작하기</button>
+        <button type="button" class="btn btn-outline-primary btn-sm" id="loadInitialButton">초기화</button>
       </div>
       <div>
-        <button type="button" class="btn btn-primary btn-sm" id="loadDataButton">기존 데이터 불러오기</button>
+        <button type="button" class="btn btn-outline-primary btn-sm" id="addRowButton">행추가</button>
       </div>
       <div>
-        <button type="button" class="btn btn-primary btn-sm" id="saveToExcelButton" onclick="saveToExcel() ">엑셀로 저장하기</button>
+        <button type="button" class="btn btn-outline-primary btn-sm" id="deleteDataButton">행삭제</button>
       </div>
-    </div>
-    
+      <div>
+        <button type="button" class="btn btn-outline-primary btn-sm" id="loadDataButton">데이터불러오기</button>
+      </div>
+      <div>
+        <button type="button" class="btn btn-outline-primary btn-sm" id="saveDataButton">데이터저장</button>
+      </div>
+      <div>
+        <button type="button" class="btn btn-outline-success btn-sm" id="saveToExcelButton" onclick="saveToExcel() ">엑셀로 저장하기</button>
+      </div>
+      <div>
+        <!-- <button type="button" class="btn btn-warning btn-sm" id="checkData">데이터체크</button> -->
+      </div>
+     
+            
+    </div>    
     <div id="grid"></div>
   </div>
 </body>

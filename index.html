@@ -15,6 +15,7 @@
   <script src="/node_modules/tui-date-picker/dist/tui-date-picker.min.js"></script>
   <script src="/node_modules/tui-grid/dist/tui-grid.min.js"></script>
   <!-- <script src="index.js"></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 </head>
 <style>
   * {
@@ -95,8 +96,19 @@
       draggable: true
     });
 
-    // 조회버튼 실행
-    $('button').click(function(){
+    // 버튼 실행
+    
+    $('#loadInitialButton').click(function(){
+      $.ajax({
+        url: "initial-data.js",
+        method: "GET",
+        success: function(result) {
+          grid.resetData(eval(result));
+        }
+      })
+    })
+
+    $('#loadDataButton').click(function(){
       $.ajax({
         url: "saved-data.js",
         method: "GET",
@@ -127,17 +139,48 @@
       },
     }
   })
+
+  // Function to save data to Excel
+  function saveToExcel() {
+  const gridData = grid.getColumns().map(column => column.name);
+  const rowData = grid.getData().map(row => Object.values(row));
+
+  const dataToExport = [gridData, ...rowData];
+
+  const worksheet = XLSX.utils.aoa_to_sheet(dataToExport);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+
+  const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  const blob = new Blob([wbout], { type: 'application/octet-stream' });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', 'grid_data.xlsx');
+  link.style.visibility = 'hidden';
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+
 </script>
 <body>
   <div id="wrap" style="width: 90%;">
-    <div style="display: flex; margin-bottom: 10px;">
+    <div style="display: flex; margin: 10px;">
       <div>
-        <img src="node_modules/bootstrap-icons/icons/chat-dots.svg">대화목록
+        <button type="button" class="btn btn-primary btn-sm" id="loadInitialButton">입력 시작하기</button>
       </div>
       <div>
-        <button type="button" class="btn btn-primary btn-sm">조회</button>
+        <button type="button" class="btn btn-primary btn-sm" id="loadDataButton">기존 데이터 불러오기</button>
+      </div>
+      <div>
+        <button type="button" class="btn btn-primary btn-sm" id="saveToExcelButton" onclick="saveToExcel() ">엑셀로 저장하기</button>
       </div>
     </div>
+    
     <div id="grid"></div>
   </div>
 </body>

@@ -34,28 +34,67 @@
       rowHeaders: ["rowNum"],
       columns: [
         {
-          header: 'Name',
-          name: 'name'
+          header: 'Id',
+          name: 'id',
+          editor: 'text'
         },
         {
-          header: 'Artist',
-          name: 'artist'
+          header: '이름',
+          name: 'name',
+          editor: 'text'
         },
         {
-          header: 'Type',
-          name: 'type'
+          header: '생년월일',
+          name: 'birth',
+          editor: {
+            type: 'datePicker',
+            options: {
+              format: 'yyyy.MM.dd'
+            }
+          } 
         },
         {
-          header: 'Release',
-          name: 'release'
+          header: '은행',
+          name: 'bank',
+          editor: {
+            type: 'select',
+            options: {
+              listItems: [
+                {
+                  text: '선택 안함',
+                  value: '-'
+                },
+                {
+                  text: '신한',
+                  value: '신한'
+                },
+                {
+                  text: 'KB',
+                  value: 'KB'
+                },
+                {
+                  text: '하나',
+                  value: '하나'
+                },
+                {
+                  text: '외환',
+                  value: '외환'
+                }
+              ]
+            }
+          }
         },
         {
-          header: 'Genre',
-          name: 'genre'
-        }
-      ]
+          header: '계좌',
+          name: 'account',
+          editor: {
+            type: 'text'
+          } 
+        },
+      ],
+      draggable: true
     });
-    
+
     // 조회버튼 실행
     $('button').click(function(){
       $.ajax({

@@ -2,7 +2,9 @@
   "dependencies": {
     "bootstrap": "^5.3.1",
     "bootstrap-icons": "^1.10.5",
+    "fs": "^0.0.1-security",
     "jquery": "^3.7.0",
-    "tui-grid": "^4.21.15"
+    "tui-grid": "^4.21.15",
+    "xlsx-populate": "^1.21.0"
   }
 }

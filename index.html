@@ -15,8 +15,9 @@
   <script src="/node_modules/tui-date-picker/dist/tui-date-picker.min.js"></script>
   <script src="/node_modules/tui-grid/dist/tui-grid.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-  <link rel="stylesheet" href="/main.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx-populate/1.21.0/xlsx-populate.min.js"></script>
 
+  <link rel="stylesheet" href="/main.css">
   <script src="saved-data.js"></script>
 
 </head>
@@ -43,11 +44,6 @@ var loadedData = [];
       scrollY: false,
       rowHeaders: ["rowNum"],
       columns: [
-        // {
-        //   header: 'Id',
-        //   name: 'id',
-        //   editor: 'text'
-        // },
         {
           header: '이름',
           name: 'name',
@@ -62,6 +58,11 @@ var loadedData = [];
               format: 'yyyy.MM.dd'
             }
           } 
+        },
+        {
+          header: '근무시간(hr)',
+          name: 'worktime',
+          editor: 'text'
         },
         {
           header: '은행',
@@ -95,7 +96,7 @@ var loadedData = [];
           }
         },
         {
-          header: '계좌',
+          header: '계좌번호',
           name: 'account',
           editor: {
             type: 'text'
@@ -144,9 +145,9 @@ var loadedData = [];
     });
 
     // 데이터 체크
-    $('#checkData').click(function() {
-      console.log(savedData);
-    });
+    // $('#checkData').click(function() {
+    //   console.log('savedData : ',savedData);
+    // });
 
     // 데이터 저장
     $('#saveDataButton').click(function() {
@@ -158,7 +159,7 @@ var loadedData = [];
       loadedData = gridData;
 
       // Log the updated savedData array (optional)
-      console.log(savedData);
+      console.log('savedData : ',savedData);
 
       // You can also choose to do other actions here, such as displaying a success message.
       // For example:
@@ -186,6 +187,206 @@ var loadedData = [];
       }
     });
 
+    // 엑셀로 저장
+    $('#saveToExcelButton').click(function() {
+    // Get the data from the grid
+    const gridData = grid.getData();
+
+    const titleData = [
+      ['마포소금나루도서관  단시간  근로자  임금지급 조서 (2023.07.27)'],
+      [],
+      ['(근무기간 : 2023. 07. 01. ~ 07. 31.)'],
+    ];
+
+    // Convert the data to an array of arrays for xlsx-populate
+    const excelData = [
+      ['연번','이름', '생년월일', '은행명', '계좌번호','임금총액','시간급','근무시간','공제합계','공제내역','실지급액(F)','비고'],
+      ['','', '', '', '','A = B X C','(B)','(C)','(D)','고용보험','F = A - D',''],
+      ['합계']
+    ];
+    let rowNum = 1;
+    gridData.forEach(row => {
+      const worktimeNumeric = parseFloat(row.worktime); // worktime은 문자데이터이므로 엑셀에서 제대로 처리하기 위해 숫자데이터로 변경해주기.
+      excelData.push([rowNum++, row.name, row.birth, row.bank, row.account, '', '', worktimeNumeric]); 
+    });
+
+    excelData.push(
+      ['* 2023년 마포구 생활임금 시급 : 10702원'],
+      ['','','','','','','','','','2023. 07.'],
+      ['','','','','','','','','작성자 : 지방사서주사보      심 상 욱 (인)'],
+      ['','','','','','','','','확인자 : 마포중앙도서관장   송 경 진 (인)']
+    )
+
+    // Create an empty workbook
+    const workbook = XlsxPopulate.fromBlankAsync();
+
+    // Create a new worksheet and populate the data
+    workbook.then(workbookInstance => {
+      // Create a new sheet and set its name to 'Sheet Name'
+      const sheet = workbookInstance.addSheet('급여내역');
+      
+      /// 특정셀에 값 넣기
+      sheet.cell('A1').value(titleData); // 해당 셀부터 excelData에 저장된 데이터 붙여넣기!
+      sheet.cell('A4').value(excelData); 
+      sheet.cell('G6').value("-");
+      sheet.cell('L6').value("＊지방회계법 55조-원단위 절사");
+      // 시급입력
+      const hourwage = 10702;
+      var startCell = `G7`;
+      var endCell = `G${rowNum-1 + 6}`;
+      sheet.range(startCell + ':' + endCell).value(hourwage); 
+      // 고용보험 입력
+      const insurance = 4790;
+      var startCell = `I7`;
+      var endCell = `I${rowNum-1 + 6}`;
+      sheet.range(startCell + ':' + endCell).value(insurance); 
+      // 공제합계입력
+      var startCell = `J7`;
+      var endCell = `J${rowNum-1 + 6}`;
+      sheet.range(startCell + ':' + endCell).value(insurance); 
+
+      /// 엑셀함수입력
+      // 임금총액(A) 
+      var startingRow = 7; 
+      for (let i = 0; i < gridData.length; i++) {
+        const rowNumber = startingRow + i;
+        const formulaCell = sheet.cell('F' + rowNumber);
+        const cellFormula = '=G' + rowNumber + '*'+'H' + rowNumber;
+        formulaCell.formula(cellFormula);
+      }
+      // 실지급액(F) 
+      var startingRow = 7; 
+      for (let i = 0; i < gridData.length; i++) {
+        const rowNumber = startingRow + i;
+        const formulaCell = sheet.cell('K' + rowNumber);
+        const cellFormula = '=F' + rowNumber + '-'+'I' + rowNumber;
+        formulaCell.formula(cellFormula);
+      }
+      // 합계
+      var seletCell = `F${rowNum-1 + 6}`;
+      var cellFormula = `=SUM(F7:${seletCell})`;       
+      sheet.cell("F6").formula(cellFormula);
+
+      var seletCell = `H${rowNum-1 + 6}`;
+      var cellFormula = `=SUM(H7:${seletCell})`;       
+      sheet.cell("H6").formula(cellFormula);
+
+      var seletCell = `I${rowNum-1 + 6}`;
+      var cellFormula = `=SUM(I7:${seletCell})`;       
+      sheet.cell("I6").formula(cellFormula);
+
+      var seletCell = `J${rowNum-1 + 6}`;
+      var cellFormula = `=SUM(J7:${seletCell})`;       
+      sheet.cell("J6").formula(cellFormula);
+
+      var seletCell = `K${rowNum-1 + 6}`;
+      var cellFormula = `=SUM(K7:${seletCell})`;       
+      sheet.cell("K6").formula(cellFormula);
+
+
+      /// 엑셀 스타일 작업
+      // 셀 색칠
+      sheet.range("A4:L5").style('fill', 'FFCC99'); // #FFCC99:주황
+
+      var startCell = `F6`;
+      var endCell = `F${rowNum-1 + 6}`;
+      sheet.range(startCell + ':' + endCell).style('fill', 'CCFFCC'); // #CCFFCC:연두
+
+      sheet.range("G6:H6").style('fill', 'CCFFCC'); // #CCFFCC:연두
+
+      var startCell = `I6`;
+      var endCell = `I${rowNum-1 + 6}`;
+      sheet.range(startCell + ':' + endCell).style('fill', 'FFFFCC'); // #FFFFCC:연노랑
+
+      sheet.cell('J6').style('fill', 'FFFFCC'); // #FFFFCC:연노랑
+
+      var startCell = `K6`;
+      var endCell = `K${rowNum-1 + 6}`;
+      sheet.range(startCell + ':' + endCell).style('fill', 'FF99CC'); // #FF99CC:연분홍
+
+      // 셀 크기 조절
+      sheet.row(1).height(30);
+      sheet.column('C').width(12);
+      sheet.column('E').width(18);
+      sheet.column('F').width(10);
+      sheet.column('K').width(10);
+      sheet.column('L').width(21);
+      // 셀 병합 후 가운데 정렬
+      sheet.range("A6:E6").merged(true)
+      sheet.range("A1:L1").merged(true)
+      sheet.range("A4:A5").merged(true)
+      sheet.range("B4:B5").merged(true)
+      sheet.range("C4:C5").merged(true)
+      sheet.range("D4:D5").merged(true)
+      sheet.range("E4:E5").merged(true)
+      sheet.range("L4:L5").merged(true)
+
+      //가운데 정렬
+      sheet.cell('A1').style({horizontalAlignment: "center", verticalAlignment: "center", });
+
+      var startCell = `A4`;
+      var endCell = `L${rowNum-1 + 6}`;
+      sheet.range(startCell + ':' + endCell).style({horizontalAlignment: "center", verticalAlignment: "center", });
+
+      // 폰트 스타일
+      sheet.cell('A1').style("fontSize", 20);
+      sheet.cell('L6').style("fontSize", 8);
+      sheet.range("A1:L5").style("bold", true);
+
+      var startCell = `I${rowNum-1 + 8}`;
+      var endCell = `J${rowNum-1 + 10}`;
+      sheet.range(startCell + ':' + endCell).style("fontSize", 14).style("fontFamily", "궁서").style("bold", true)
+      
+      sheet.range("A6:K6").style('fontColor', '0000FF').style("bold", true); // #0000FF:파랑
+      
+      // 표 테두리
+      sheet.range("A4:L6").style("border", true)
+
+      var startCell = `A7`;
+      var endCell = `L${rowNum-1 + 6}`;
+      sheet.range(startCell + ':' + endCell).style("border", true);
+
+      // 데이터형식
+      var startCell = `F6`;
+      var endCell = `G${rowNum-1 + 6}`;
+      sheet.range(startCell + ':' + endCell).style("numberFormat", `#,##0`)
+
+      var startCell = `I6`;
+      var endCell = `K${rowNum-1 + 6}`;
+      sheet.range(startCell + ':' + endCell).style("numberFormat", `#,##0`)
+
+      var startCell = `H7`;
+      var endCell = `H${rowNum-1 + 6}`;
+      sheet.range(startCell + ':' + endCell).style("numberFormat", "0")
+
+
+
+      /// 저장에 관한 코드
+      // Delete the original 'Sheet1'
+      workbookInstance.deleteSheet('Sheet1');
+      // Convert the workbook to a buffer
+      return workbookInstance.outputAsync();
+    })
+    .then(buffer => {
+      // Create a Blob from the buffer
+      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+      // Create a download link
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = '마포소금나루도서관  단시간  근로자  임금지급 조서.xlsx';
+      a.click();
+      // Clean up
+      window.URL.revokeObjectURL(url);
+    })
+    .catch(err => {
+      console.error('Error exporting to Excel:', err);
+      alert('데이터를 저장하는 중에 오류가 발생했습니다.');
+    });
+  });
+
+
   }
   // tui.grid 스타일 테마 
   tui.Grid.applyTheme('normal',{
@@ -210,31 +411,7 @@ var loadedData = [];
   })
 
 
-  // Function to save data to Excel
-  function saveToExcel() {
-  const gridData = grid.getColumns().map(column => column.name);
-  const rowData = grid.getData().map(row => Object.values(row));
-
-  const dataToExport = [gridData, ...rowData];
-
-  const worksheet = XLSX.utils.aoa_to_sheet(dataToExport);
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-
-  const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-  const blob = new Blob([wbout], { type: 'application/octet-stream' });
-  const url = URL.createObjectURL(blob);
-
-  const link = document.createElement('a');
-  link.setAttribute('href', url);
-  link.setAttribute('download', '마포소금나루도서관  단시간  근로자  임금지급 조서.xlsx');
-  link.style.visibility = 'hidden';
-
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
-
+  
 
 </script>
 <body>
@@ -251,13 +428,13 @@ var loadedData = [];
         <button type="button" class="btn btn-outline-primary btn-sm" id="deleteDataButton">행삭제</button>
       </div>
       <div>
-        <button type="button" class="btn btn-outline-primary btn-sm" id="loadDataButton">데이터불러오기</button>
-      </div>
-      <div>
         <button type="button" class="btn btn-outline-primary btn-sm" id="saveDataButton">데이터저장</button>
       </div>
       <div>
-        <button type="button" class="btn btn-outline-success btn-sm" id="saveToExcelButton" onclick="saveToExcel() ">엑셀로 저장하기</button>
+        <button type="button" class="btn btn-outline-primary btn-sm" id="loadDataButton">데이터불러오기</button>
+      </div>
+      <div>
+        <button type="button" class="btn btn-outline-success btn-sm" id="saveToExcelButton" >엑셀로 저장하기</button>
       </div>
       <div>
         <!-- <button type="button" class="btn btn-warning btn-sm" id="checkData">데이터체크</button> -->

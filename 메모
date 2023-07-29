@@ -1,0 +1,30 @@
+/// 엑셀파일로 출력 함수
+
+  function saveToExcel() {
+  // const gridData = grid.getColumns().map(column => column.name); // 헤더 데이터 가져오기
+
+  const titleData = ['마포소금나루도서관  단시간  근로자  임금지급 조서(2023.07.27)']
+  const workingTimeData = ['근무기간 : 2023. 07. 01. ~ 07. 31']
+  const headerData = ['이름', '생년월일', '은행', '계좌'] 
+  const rowData = grid.getData().map(row => Object.values(row)); // 행 데이터 가져오기
+
+  const dataToExport = [titleData, [], workingTimeData, headerData, ...rowData]; // 각 배열들을 결합해서 하나의 배열로 만들기
+  
+
+  // 엑셀파일로 변환. 형식조정.
+  const worksheet = XLSX.utils.aoa_to_sheet(dataToExport);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, '급여내역');
+
+  const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  const blob = new Blob([wbout], { type: 'application/octet-stream' });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', '마포소금나루도서관  단시간  근로자  임금지급 조서.xlsx');
+  link.style.visibility = 'hidden';
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);

@@ -1,16 +1,14 @@
 * {
+  margin: 0;
+  padding: 0;
+}
+
+.wrap {
+  max-width: 1200px;
   margin: 0 auto;
-}
 
-#wrap {
-  width: 70%;
 }
-#wrap-btn{
-  display: flex; 
-  margin: 10px;
-}
-
-#grid {
-  /* width: 80%; */
-  color: #f6fcff;
+.wrap-btn{
+  display: flex;
+  justify-content: space-around;
 }

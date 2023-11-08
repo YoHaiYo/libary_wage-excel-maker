@@ -1,0 +1,128 @@
+/* Common */
+* {
+  margin: 0;
+  padding: 0;
+}
+a {
+  text-decoration: none;
+}
+.wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: white;
+}
+.main-wrap-btn{
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 20px;
+}
+body {
+  background-image: url(../img/도서관배경-투명도.png);
+  background-size: cover;  
+}
+.btn {
+  height: auto;
+}
+/* tui */
+.tui-grid-body-area {
+  background-color: transparent !important;
+  height: auto  !important;
+}
+.tui-grid-container{
+  font-size: 15px;
+  font-family: sans-serif;  
+}
+.tui-grid-row-header-draggable::after{
+  content: "☰";
+}
+.tui-grid-row-header-draggable>div>span {  
+  display: none;
+}
+/* PopUP */
+.popupdiv::before{
+  content: "";
+  position: fixed;
+  background-color: rgba(72, 72, 72, 0.5);
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;  
+  z-index: 1;
+}
+.popupdiv #popup {
+  display: block;
+}
+
+#popup {
+  position: fixed;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  
+  width: 80%;
+  height: 80%;
+  padding: 2rem 2rem;
+  z-index: 99;
+
+  border-radius: 10px;
+
+  display: none;
+
+  background-color: white;
+  border: 1px solid #333;
+}
+
+#popup .popup-btn {
+  background-color: #333;
+  width: 100%;
+  position: absolute;
+  right: 0px;
+  bottom: 0px;  
+  text-align: center;
+  border-radius: 0 0 10px 10px;
+}
+#popup .popup-btn a {
+  color: #fff;
+  padding: 0 5px;
+}
+
+/* HEADER */
+#hd {
+  border-bottom: 1px solid darkblue;
+  box-shadow: rgba(149,160,165,.494) 0px 2px 15px;
+}
+
+#hd h1 img {
+  height: 55px;
+  margin: 10px 0 5px;
+}
+#hd .header-top {
+  display: flex;
+  justify-content: end; 
+}
+#hd .guide {
+  position: absolute;
+  right: 27.5%;
+  top: 25px;
+  font-weight: bold;
+  font-size: 14px;
+  /* border: 1px solid #333;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: rgb(255, 189, 67); */
+}
+/* main */
+main {
+  height: 91vh;
+}
+
+img[src="./img/excel.png"] {
+  width: 15px;
+}
+/* footer */
+#fd {
+  text-align: center;
+  font-size: .85rem;
+  height: 50px;
+}

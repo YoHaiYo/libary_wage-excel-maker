@@ -14,7 +14,7 @@
 
     // 로드되지마자 보여줄 데이터
   $.ajax({
-    url: "saved-data.js",
+    url: "./js/saved-data.js",
     method: "GET",
     success: function(result) {
       grid.resetData(eval(result));
@@ -497,12 +497,12 @@
         showHorizontalBorder: true,
       },
       header: {
-        background: "#f8b617",
+        background: "#7a90fc",
         border: "#e0e0e0",
         showHorizontalBorder: true,
       },
       rowHeader: {
-        background: "#f8b617",
+        background: "#7a90fc",
         border: "#e0e0e0",
         showHorizontalBorder: true,
       },

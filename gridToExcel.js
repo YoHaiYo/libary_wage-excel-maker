@@ -497,12 +497,12 @@
         showHorizontalBorder: true,
       },
       header: {
-        background: "#f0fbff",
+        background: "#f8b617",
         border: "#e0e0e0",
         showHorizontalBorder: true,
       },
       rowHeader: {
-        background: "#f0fbff",
+        background: "#f8b617",
         border: "#e0e0e0",
         showHorizontalBorder: true,
       },

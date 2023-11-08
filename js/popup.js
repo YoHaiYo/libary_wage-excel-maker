@@ -19,7 +19,7 @@
         $("#popup").show();
       } else {
         // $("#popup").hide();
-        $('body').removeClass('popupdiv')
+        $('body').removeClass('popupdiv') // 쿠기가없으면 작동
         
       }
     });

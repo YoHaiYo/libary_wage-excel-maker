@@ -16,9 +16,11 @@
     $(document).ready(function () {
       cookiedata = document.cookie;
       if (cookiedata.indexOf("close=Y") < 0) {
-        $("popup").show();
+        $("#popup").show();
       } else {
-        $("popup").hide();
+        // $("#popup").hide();
+        $('body').removeClass('popupdiv')
+        
       }
     });
 
@@ -27,11 +29,11 @@
         setCookie("close", "Y", 1);
       }
 
-      $("popup").hide();
+      $("#popup").hide();
     }
 
     function exit2() {
-      $("popup").hide();
+      $("#popup").hide();
       setCookie("close", "Y", 1);
     }
 

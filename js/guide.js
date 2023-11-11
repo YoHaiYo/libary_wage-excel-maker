@@ -23,6 +23,7 @@ const mainSwiper = new Swiper('#mainSwiper.swiper', {
   pagination: {
     el: '#mainSwiper .swiper-pagination',
     clickable:true,
+    type: 'fraction'
   },
   // 앞뒤버튼
   navigation: {

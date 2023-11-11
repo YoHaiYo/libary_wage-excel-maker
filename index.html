@@ -14,6 +14,10 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
   <!-- CSS -->
   <link rel="stylesheet" href="./css/main.css">
+  <!-- SWIPER -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <!-- script를 순서대로 가져와야합니다. -->
   <script src="/node_modules/jquery/dist/jquery.min.js"></script>
   <!-- 영상에선 tui-code-snippet까지 추가해주지만 현재 버전에선 없는듯합니다. -->
@@ -24,7 +28,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx-populate/1.21.0/xlsx-populate.min.js"></script>
 
   <script src="./js/gridToExcel.js"></script>
-  <script defer src="./js/popup.js"></script>
+  <script defer src="./js/guide.js"></script>
 
 </head>
 
@@ -36,7 +40,7 @@
           <img src="./img/도서관임금조서-로고.png" alt="로고">
         </a>
       </h1>
-      <button class="guide btn btn-warning">
+      <button class="guide btn btn-warning modal-btn" data-target=".menu-1">
         <i class="bi bi-info-square"></i>
         사용가이드
       </button>
@@ -83,18 +87,30 @@
     </br>
   </footer>
 
-  <div id="popup">
-    <div class="popup-content">
-      사용설명서 SWIPER로 설명하기.<br>
-      사용가이드에도 연결하기.<br>
-      하루동안 보지않기 선택 후 사용가이드를 클릭하는 경우 문제는 고민해보기 !
-    </div>
-    <div class="popup-btn">
-      <a href="javascript:void(0);" onclick="exit2()">하루동안 보지 않기</a>
-      <input type="checkbox" name="layer-close">
-      <a class="close" href="javascript:void(0);" onclick="exit()">닫기</a>
+  <div class="modal-box menu-1">
+    <button class="close-btn"><i class="bi bi-x-square"></i></button>
+    <div class="swiper" id="mainSwiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <img src="https://placehold.co/400x300/png" alt="">
+        </div>
+        <div class="swiper-slide">
+          <img src="https://placehold.co/400x300/png" alt="">
+        </div>
+        <div class="swiper-slide">
+          <img src="https://placehold.co/400x300/png" alt="">
+        </div>
+        <div class="swiper-slide">
+          <img src="https://placehold.co/400x300/png" alt="">
+        </div>
+      </div>
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
     </div>
   </div>
+  <hr>
+
 </body>
 
 </html>

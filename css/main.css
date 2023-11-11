@@ -38,54 +38,55 @@ body {
 .tui-grid-row-header-draggable>div>span {  
   display: none;
 }
-/* PopUP */
-.popupdiv::before{
-  content: "";
+/* 가이드 */
+
+.modal-box{
+  display: none;
   position: fixed;
-  background-color: rgba(72, 72, 72, 0.5);
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;  
+  top: 50%;      
+  left: 50%;
+  transform: translate(-50%, -50%); 
+  width: 80%;
+  height: 90%;
+  border: 1px solid #222;
+  border-radius: 1rem;
+  background-color: white;  
+  z-index: 99;      
+}
+.close-btn {
+  background-color: transparent;
+  border: 0;
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 1.5rem;
   z-index: 1;
 }
-.popupdiv #popup {
+body:before{
+  content: "";
+  position: fixed;           
+  background-color: #333;
+  opacity: .5;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+.dark-box:before{
   display: block;
 }
 
-#popup {
-  position: fixed;
-
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%,-50%);
-  
-  width: 80%;
-  height: 80%;
-  padding: 2rem 2rem;
-  z-index: 99;
-
-  border-radius: 10px;
-
-  display: none;
-
-  background-color: white;
-  border: 1px solid #333;
+.showdiv{
+  display: block !important;
 }
-
-#popup .popup-btn {
-  background-color: #333;
-  width: 100%;
+#mainSwiper {
   position: absolute;
-  right: 0px;
-  bottom: 0px;  
-  text-align: center;
-  border-radius: 0 0 10px 10px;
+  top: 10%;
+  border: 1px solid #333;
+  width: 100%;
+  height: 80%;
 }
-#popup .popup-btn a {
-  color: #fff;
-  padding: 0 5px;
-}
+
+
 
 /* HEADER */
 #hd {

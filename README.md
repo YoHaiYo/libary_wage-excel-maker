@@ -1,9 +1,9 @@
-### 배포용 링크
+### 0. 배포용 링크
 https://librarywagereport.netlify.app/
 
 ### 1. **Preview**
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/14ed8c42-4804-49b6-b27e-56a67f0dd740/9433354a-7fea-4f2e-a6af-13c1f90320f9/Untitled.png)
+![image](https://github.com/YoHaiYo/libary_wage-excel-maker/assets/124754510/20866c8d-8537-46c3-86c6-e5c8211f4257)
 
 ### 2. 프로젝트 간단 소개
 

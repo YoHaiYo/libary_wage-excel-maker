@@ -1,11 +1,11 @@
-### 0. 배포용 링크
+# 0. 배포용 링크
 https://librarywagereport.netlify.app/
 
-### 1. **Preview**
+# 1. **Preview**
 
 ![image](https://github.com/YoHaiYo/libary_wage-excel-maker/assets/124754510/20866c8d-8537-46c3-86c6-e5c8211f4257)
 
-### 2. 프로젝트 간단 소개
+# 2. 프로젝트 간단 소개
 
   도서관에서 반복적인 업무 때문에 고생하는 지인을 위해 기획하게 된 프로젝트입니다. 
 
@@ -13,7 +13,7 @@ https://librarywagereport.netlify.app/
 
  스터디만을 위한 웹기술이 아닌 주위 실생활에 도움을 주는 웹기술을 개발해보고 싶은 마음에 제작한 프로젝트입니다.
 
-### 3. 프로젝트 특징
+# 3. 프로젝트 특징
 
 1. tui-grid를 사용해 엑셀 환경을 거의 그대로 재현하여 사용자의 편의성을 극대화.
     
@@ -22,7 +22,7 @@ https://librarywagereport.netlify.app/
 2. 사용자 가이드를 제공하여 처음 사용하는 사용자도 무리없이 서비스 이용할 수 있게 구성.
 3. ‘행추가’. ‘행삭제’, 드래그로 행변경 등의 기능으로 사용자가 데이터를 입력하는데 불편함을 최소화.
 
-### 4. 주요사용 package
+# 4. 주요사용 package
 
 - tui-time-picker
 - tui-date-picker
